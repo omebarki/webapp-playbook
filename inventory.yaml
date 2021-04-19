@@ -1,0 +1,10 @@
+all:
+  vars:
+    host_key_checking: False
+  children:
+    db_and_web_servers:
+      hosts:
+        db_and_web_server1:
+          ansible_host: 192.168.160.161
+        db_and_web_server2:
+          ansible_host: 192.168.160.162

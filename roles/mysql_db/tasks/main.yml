@@ -1,0 +1,39 @@
+---
+# tasks file for mysql_db
+- name: Install pymysql python package
+  pip:
+    name: pymysql
+
+- name: Install MySQL database
+  apt:
+    name:
+      - mysql-server
+      - mysql-client
+    state: present
+    update_cache: yes
+
+- name: Start MySQL Service
+  service:
+    name: mysql
+    state: started
+    enabled: yes
+
+- name: Create Application Database
+  mysql_db:
+    name: "{{ db_name }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    state: present
+  register: my_result
+
+- name: Debug
+  debug:
+    msg: "{{ my_result }}"
+
+- name: Create A Database User
+  mysql_user:
+    name: "{{ db_user }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    password: "{{ db_user_password }}"
+    priv: '*.*:ALL'
+    state: present
+  no_log: yes
